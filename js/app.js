@@ -8,13 +8,15 @@ var fileNames = ['bag.jpg', 'boots.jpg','chair.jpg',
   'bubblegum.jpg', 'dog-duck.jpg', 'pet-sweep.jpg',
   'sweep.png', 'usb.gif'];
 
-function Product(imgFilePath, itemNum) {
-  this.imgFilePath = imgFilePath;
+function Product(imgFileName, itemNum) {
+  this.imgFilePath = 'img/' + imgFileName;
+  this.productName = imgFileName.substring(0, imgFileName.lastIndexOf('.'));
   this.itemNum = itemNum;
   this.altText = '';
   this.timesShown = 0;
   this.timesChosen = 0;
   Product.allProducts.push(this);
+  // console.log(this);
 }
 
 // This list holds all our Product objects
@@ -22,14 +24,14 @@ Product.allProducts = [];
 
 // Create new Product objects from fileNames
 for (let i = 0; i < fileNames.length; i++) {
-  var imgFilePath = 'img/' + fileNames[i];
-  new Product(imgFilePath, i);
+  var imgFileName = fileNames[i];
+  new Product(imgFileName, i);
 }
 
 // Let's log these to the console to see what they look like
-for (let i = 0; i < Product.allProducts.length; i++) {
+// for (let i = 0; i < Product.allProducts.length; i++) {
   // console.log(Product.allProducts[i]);
-}
+// }
 
 // Need code to randomize the images
 // Need code to ensure images selected this round are unique
@@ -37,62 +39,81 @@ for (let i = 0; i < Product.allProducts.length; i++) {
 
 
 function getAllChoices() {
-  // return an array representing the indices of all items in Product.allProducts
+  // return an array representing the productName property of all items in Product.allProducts
   var allChoices = [];
   for (let i = 0; i < Product.allProducts.length; i++) {
-    allChoices.push(i);
+    allChoices.push(Product.allProducts[i].productName);
   }
   console.log('allChoices:', allChoices);
   return allChoices;
 }
 
-function removeChosenProduct(remainingChoices, index) {
-  var targetValue = remainingChoices.indexOf(index);
-  if (targetValue >= 0) {
-    remainingChoices.splice(remainingChoices.indexOf(index), 1);
-    console.log('index:', index, 'remainingChoices:', remainingChoices);
-    return remainingChoices.splice(remainingChoices.indexOf(index), 1);
+function removeChosenProduct(availableChoices, prodName) {
+  console.log('Trying to remove:', prodName);
+  for (let i = 0; i < availableChoices.length; i++) {
+    if (availableChoices[i].prodName === prodName) {
+      console.log('Found', availableChoices[i]);
+      availableChoices[i] = '';
+      break;
+    }
   }
-  else {
-    console.log('index:', index, 'remainingChoices:', remainingChoices);
-    return remainingChoices;
-  }
+  return availableChoices;
 }
 
 function getRandomInRange(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  var randInt = Math.floor(Math.random() * (max - min) + min);
+  console.log(min, max, randInt);
+  return randInt;
 }
 
+function getRandomImage(availableChoices) {
+  console.log('availableChoices in getRandomImage:', availableChoices);
+  var choice = '';
+  while (choice === '') {
+    choice = availableChoices[getRandomInRange(0, availableChoices.length)];
+    console.log('choice:', choice);
+  }
+  // remove the image from availableImages
+  removeChosenProduct(availableChoices, choice);
+  return choice;
+}
+
+function getProductId(prodName) {
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    if (Product.allProducts[i].productName === prodName) {
+      return Product.allProduct[i].itemNum;
+    }
+  }
+}
 
 function randomizeImages() {
   // get a list with all the possible choices
   var availableChoices = getAllChoices();
   // for every previously chosen item, remove that choice
   for (let i = 0; i < Product.prevChoices.length; i++) {
-    availableChoices = removeChosenProduct(availableChoices, i);
+    availableChoices = removeChosenProduct(availableChoices, Product.prevChoices[i]);
     console.log('availableChoices:', availableChoices);
   }
-  var img1Index = getRandomInRange(0, availableChoices.length);
-  availableChoices = removeChosenProduct(availableChoices, img1Index);
+
+  var img1Name = getRandomImage(availableChoices);
   console.log('availableChoices:', availableChoices);
-  var img2Index = getRandomInRange(0, availableChoices.length);
-  availableChoices = removeChosenProduct(availableChoices, img2Index);
+  var img2Name = getRandomImage(availableChoices);
   console.log('availableChoices:', availableChoices);
-  var img3Index = getRandomInRange(0, availableChoices.length);
-  availableChoices = removeChosenProduct(availableChoices, img3Index);
+  var img3Name = getRandomInRange(0, availableChoices);
   console.log('availableChoices:', availableChoices);
+  
   // capture the previous round's choices as Product.prevChoices
   Product.prevChoices = Product.currentChoices;
   // assign new choices to Product.currentChoices;
-  Product.currentChoices = [img1Index, img2Index, img3Index];
+  Product.currentChoices = [img1Name, img2Name, img3Name];
   // console.log(Product.allProducts[img1Index]);
   // console.log(Product.allProducts[img2Index]);
   // console.log(Product.allProducts[img3Index]);
-  document.getElementById('img1').src = Product.allProducts[img1Index].imgFilePath;
+  document.getElementById('img1').src = Product.allProducts[getProductId(img1Name)].imgFilePath;
   // console.log(document.getElementById('img1'));
-  document.getElementById('img2').src = Product.allProducts[img2Index].imgFilePath;
+  document.getElementById('img2').src = Product.allProducts[getProductId(img2Name)].imgFilePath;
   // console.log(document.getElementById('img2'));  
-  document.getElementById('img3').src = Product.allProducts[img3Index].imgFilePath;
+  document.getElementById('img3').src = Product.allProducts[getProductId(img3Name)].imgFilePath;
   // console.log(document.getElementById('img3'));
 }
 
@@ -118,8 +139,8 @@ img3.addEventListener('click', doChoice);
 var rounds = 0;
 var currentChoices = [];
 // This holds the choices from the previous round
-Product.prevChoices = [0, 1, 2]; // initialize with values we'll never see at runtime
+Product.prevChoices = ['placeholder', 'placeholder', 'placeholder']; // initialize with values we'll never see at runtime
 // This holds choices in the current round
-Product.currentChoices = [];
+Product.currentChoices = ['', '', ''];
 
 randomizeImages();
