@@ -1,3 +1,4 @@
+# User Stories
 ## Market Research Team
 + As a member of the market research team, I want to present participants with a choice between 3 of our products and allow them to choose one.
 + As a member of the market research team, I want to collect data on the total number of times each product is clicked and how many times the product was presented.
