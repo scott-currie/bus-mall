@@ -73,7 +73,7 @@ function getProductByName(prodName) {
   for (var product of Product.allProducts) {
     if (product.productName === prodName) {
       return product;
-    }   
+    }
   }
 }
 
@@ -119,14 +119,64 @@ function disableEventListeners() {
 }
 
 function summarizeResults() {
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    var thisProd = Product.allProducts[i];
-    var result = 'Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.';
-    console.log(result);
-    var resultP = document.getElementById('results').appendChild(document.createElement('p'));
-    resultP.textContent = result;
+  // for (let i = 0; i < Product.allProducts.length; i++) {
+  //   var thisProd = Product.allProducts[i];
+  //   var result = 'Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.';
+  //   console.log(result);
+  //   var resultP = document.getElementById('results').appendChild(document.createElement('p'));
+  //   resultP.textContent = result;
+  // }
+  var productNames = [];
+  var voteTotals = [];
+  for (var product of Product.allProducts) {
+    productNames.push(product.productName);
+    voteTotals.push(product.timesChosen);
   }
+  makeChart(productNames, voteTotals);
 }
+
+function getRandom(max) {
+  return Math.floor(Math.random() * (max) + 1);
+}
+
+function makeChart(productNames, voteTotals) {
+  var thisCanvas = document.getElementById('statsChart');
+  thisCanvas.width = '500';
+  thisCanvas.height = '500';
+  var ctx = thisCanvas.getContext('2d');
+  var borderColors = [];
+  var bgColors = [];
+  // get as many random rgba values as we have items
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    borderColors.push(`rgba(${getRandom(255)},${getRandom(255)},${getRandom(255)},1`);
+    bgColors.push(`rgba(${getRandom(255)},${getRandom(255)},${getRandom(255)},1`);
+  }
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of Votes',
+        data: voteTotals,
+        backgroundColor: bgColors,
+        borderColor: [
+          borderColors
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
+}
+
 
 // Need an event listener for each image element
 var img1 = document.getElementById('img1');
