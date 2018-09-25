@@ -28,7 +28,6 @@ for (let i = 0; i < fileNames.length; i++) {
   new Product(imgFileName, i);
 }
 
-
 function vote(event) {
   // get a reference to the clicked element id
   var targetId = event.target.id;
@@ -42,9 +41,11 @@ function vote(event) {
     for (let i = 0; i < 3; i++) {
       // get the src attribute of the current tag
       var targetImgSrc = document.getElementById(imgTagIds[i]).src;
+      var targetImgId = document.getElementById(imgTagIds[i]).id;
       // strip off the url part
       targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
       console.log('targetImgSrc', targetImgSrc);
+      console.log('targetImgId', targetImgId);
       // use the img src to find the object associated with the image
       var thisProduct = getObjectByImgSrc(targetImgSrc);
       // increment timesShown
@@ -83,7 +84,7 @@ function randomizeImages() {
   var blacklist = []; // values that are off limits this time
   // add prevChoices to blacklist
   blacklist = blacklist.concat(Product.prevChoices);
-  // get a list with all the possible choices
+  // get 3 random indices that are not in blacklist
   var randProd1Idx = getRandomProductIndex(blacklist);
   var randProd2Idx = getRandomProductIndex(blacklist);
   var randProd3Idx = getRandomProductIndex(blacklist);
@@ -106,8 +107,11 @@ function getRandomProductIndex(blacklist) {
 function showImages() {
   // Get each img element and change its src attribute to match the currently selected random indices
   document.getElementById('img1').src = Product.allProducts[Product.prevChoices[0]].imgFilePath;
+  document.getElementById('img1').alt = Product.allProducts[Product.prevChoices[0]].productName;
   document.getElementById('img2').src = Product.allProducts[Product.prevChoices[1]].imgFilePath;
+  document.getElementById('img2').alt = Product.allProducts[Product.prevChoices[1]].productName;  
   document.getElementById('img3').src = Product.allProducts[Product.prevChoices[2]].imgFilePath;
+  document.getElementById('img3').alt = Product.allProducts[Product.prevChoices[3]].productName;  
   // randomizeImages();
 }
 
