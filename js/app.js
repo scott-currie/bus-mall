@@ -16,7 +16,6 @@ function Product(imgFileName, itemNum) {
   this.timesShown = 0;
   this.timesChosen = 0;
   Product.allProducts.push(this);
-  // console.log(this);
 }
 
 // This list holds all our Product objects
@@ -139,9 +138,7 @@ img3.addEventListener('click', vote);
 
 
 // This holds the choices from the previous round
-Product.prevChoices = []; // initialize with values we'll never see at runtime
-// This holds choices in the current round
-Product.currentChoices = [];
+Product.prevChoices = []; // previous round's choices to avoid repeats
 
 var trials = 25;
 
