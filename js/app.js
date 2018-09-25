@@ -26,6 +26,7 @@ Product.allProducts = [];
 for (let i = 0; i < fileNames.length; i++) {
   var imgFileName = fileNames[i];
   new Product(imgFileName, i);
+  console.log(Product.allProducts[i]);
 }
 
 function vote(event) {
@@ -40,14 +41,11 @@ function vote(event) {
     // loop through all the img tags
     for (let i = 0; i < 3; i++) {
       // get the src attribute of the current tag
-      var targetImgSrc = document.getElementById(imgTagIds[i]).src;
-      var targetImgId = document.getElementById(imgTagIds[i]).id;
+      var targetImgName = document.getElementById(imgTagIds[i]).alt;
       // strip off the url part
-      targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
-      console.log('targetImgSrc', targetImgSrc);
-      console.log('targetImgId', targetImgId);
+      console.log('targetImgName', targetImgName);
       // use the img src to find the object associated with the image
-      var thisProduct = getObjectByImgSrc(targetImgSrc);
+      var thisProduct = getProductByName(targetImgName);
       // increment timesShown
       thisProduct.timesShown++;
       if (i === chosenIdx) {
@@ -72,11 +70,11 @@ function vote(event) {
   }
 }
 
-function getObjectByImgSrc(imgSrc) {
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    if (Product.allProducts[i].imgFilePath === imgSrc) {
-      return Product.allProducts[i];
-    }
+function getProductByName(prodName) {
+  for (var product of Product.allProducts) {
+    if (product.productName === prodName) {
+      return product;
+    }   
   }
 }
 
@@ -109,10 +107,9 @@ function showImages() {
   document.getElementById('img1').src = Product.allProducts[Product.prevChoices[0]].imgFilePath;
   document.getElementById('img1').alt = Product.allProducts[Product.prevChoices[0]].productName;
   document.getElementById('img2').src = Product.allProducts[Product.prevChoices[1]].imgFilePath;
-  document.getElementById('img2').alt = Product.allProducts[Product.prevChoices[1]].productName;  
+  document.getElementById('img2').alt = Product.allProducts[Product.prevChoices[1]].productName;
   document.getElementById('img3').src = Product.allProducts[Product.prevChoices[2]].imgFilePath;
-  document.getElementById('img3').alt = Product.allProducts[Product.prevChoices[3]].productName;  
-  // randomizeImages();
+  document.getElementById('img3').alt = Product.allProducts[Product.prevChoices[2]].productName;
 }
 
 function disableEventListeners() {
