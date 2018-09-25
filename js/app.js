@@ -9,7 +9,7 @@ var fileNames = ['bag.jpg', 'boots.jpg','chair.jpg',
   'sweep.png', 'usb.gif'];
 
 function Product(imgFileName, itemNum) {
-  this.imgFilePath = 'img/' + imgFileName;
+  this.imgFilePath = 'img/products/' + imgFileName;
   this.productName = imgFileName.substring(0, imgFileName.lastIndexOf('.'));
   this.itemNum = itemNum;
   this.altText = '';
@@ -79,7 +79,6 @@ function getObjectByImgSrc(imgSrc) {
   }
 }
 
-
 function randomizeImages() {
   var blacklist = []; // values that are off limits this time
   // add prevChoices to blacklist
@@ -103,7 +102,6 @@ function getRandomProductIndex(blacklist) {
   console.log(numToTry, blacklist);
   return numToTry;
 }
-
 
 function showImages() {
   // Get each img element and change its src attribute to match the currently selected random indices
