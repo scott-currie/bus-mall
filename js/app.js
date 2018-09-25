@@ -119,13 +119,6 @@ function disableEventListeners() {
 }
 
 function summarizeResults() {
-  // for (let i = 0; i < Product.allProducts.length; i++) {
-  //   var thisProd = Product.allProducts[i];
-  //   var result = 'Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.';
-  //   console.log(result);
-  //   var resultP = document.getElementById('results').appendChild(document.createElement('p'));
-  //   resultP.textContent = result;
-  // }
   var productNames = [];
   var voteTotals = [];
   for (var product of Product.allProducts) {
