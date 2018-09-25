@@ -28,61 +28,45 @@ for (let i = 0; i < fileNames.length; i++) {
   new Product(imgFileName, i);
 }
 
-// Let's log these to the console to see what they look like
-// for (let i = 0; i < Product.allProducts.length; i++) {
-// console.log(Product.allProducts[i]);
-// }
-
-// Need code to randomize the images
-// Need code to ensure images selected this round are unique
-// Need code to track the previous images selected
-
-
-// function getAllChoices() {
-//   // return an array representing the productName property of all items in Product.allProducts
-//   var allChoices = [];
-//   for (let i = 0; i < Product.allProducts.length; i++) {
-//     allChoices.push(Product.allProducts[i].productName);
-//   }
-//   console.log('allChoices:', allChoices);
-//   return allChoices;
-// }
-
-// function removeChosenProduct(availableChoices, prodName) {
-//   console.log('Trying to remove:', prodName);
-//   for (let i = 0; i < availableChoices.length; i++) {
-//     if (availableChoices[i].prodName === prodName) {
-//       console.log('Found', availableChoices[i]);
-//       availableChoices[i] = '';
-//       break;
-//     }
-//   }
-//   return availableChoices;
-// }
-
-function getRandomInRange(max) {
-  var randInt = Math.floor(Math.random() * max);
-  return randInt;
-}
 
 function vote(event) {
+  // get a reference to the clicked element id
+  var targetId = event.target.id;
+  // Here's our image id's
+  var imgTagIds = ['img1', 'img2', 'img3'];
   // was this click a vote?
-  if ((event.target.id === 'img1') || (event.target.id === 'img2') || (event.target.id === 'img3')) {
-    console.log(event.target.id);
-    console.log(event);
-    // I can get the src of the clicked image like this:
-    var targetImgSrc = document.getElementById(event.target.id).src;
-    console.log(targetImgSrc);
-    // I can then use that to id the Product object
-    targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
-    var chosen = getObjectByImgSrc(targetImgSrc);
-    console.log(chosen);
-    // find out which img was clicked
+  if ((targetId === 'img1') || (targetId === 'img2') || (targetId === 'img3')) {
+    // get the index of the tag that was chosen
+    var chosenIdx = imgTagIds.indexOf(targetId);
+    // loop through all the img tags
+    for (let i = 0; i < 3; i++) {
+      // get the src attribute of the current tag
+      var targetImgSrc = document.getElementById(imgTagIds[i]).src;
+      // strip off the url part
+      targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
+      console.log('targetImgSrc', targetImgSrc);
+      // use the img src to find the object associated with the image
+      var thisProduct = getObjectByImgSrc(targetImgSrc);
+      // increment timesShown
+      thisProduct.timesShown++;
+      if (i === chosenIdx) {
+        // increment timesChosen if this was the tag at chosenIdx
+        thisProduct.timesChosen++;
+      }
+    }
 
-    // increment that object's value
-
-    randomizeImages();
-    showImages();
+    // decrement trials
+    trials--;
+    // set up the next trio of images if we're not out of trials
+    if (trials > 0) {
+      // Randomize the images
+      randomizeImages();
+      // Display the next 3 images
+      showImages();
+    }
+    else {
+      summarizeResults();
+    }
   }
 }
 
@@ -128,6 +112,12 @@ function showImages() {
   // randomizeImages();
 }
 
+function summarizeResults() {
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    var thisProd = Product.allProducts[i];
+    console.log('Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.');
+  }
+}
 
 // Need an event listener for each image element
 var img1 = document.getElementById('img1');
@@ -142,6 +132,8 @@ img3.addEventListener('click', vote);
 Product.prevChoices = []; // initialize with values we'll never see at runtime
 // This holds choices in the current round
 Product.currentChoices = [];
+
+var trials = 5;
 
 randomizeImages();
 showImages();
