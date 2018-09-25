@@ -30,7 +30,7 @@ for (let i = 0; i < fileNames.length; i++) {
 
 // Let's log these to the console to see what they look like
 // for (let i = 0; i < Product.allProducts.length; i++) {
-  // console.log(Product.allProducts[i]);
+// console.log(Product.allProducts[i]);
 // }
 
 // Need code to randomize the images
@@ -38,109 +38,110 @@ for (let i = 0; i < fileNames.length; i++) {
 // Need code to track the previous images selected
 
 
-function getAllChoices() {
-  // return an array representing the productName property of all items in Product.allProducts
-  var allChoices = [];
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    allChoices.push(Product.allProducts[i].productName);
-  }
-  console.log('allChoices:', allChoices);
-  return allChoices;
-}
+// function getAllChoices() {
+//   // return an array representing the productName property of all items in Product.allProducts
+//   var allChoices = [];
+//   for (let i = 0; i < Product.allProducts.length; i++) {
+//     allChoices.push(Product.allProducts[i].productName);
+//   }
+//   console.log('allChoices:', allChoices);
+//   return allChoices;
+// }
 
-function removeChosenProduct(availableChoices, prodName) {
-  console.log('Trying to remove:', prodName);
-  for (let i = 0; i < availableChoices.length; i++) {
-    if (availableChoices[i].prodName === prodName) {
-      console.log('Found', availableChoices[i]);
-      availableChoices[i] = '';
-      break;
-    }
-  }
-  return availableChoices;
-}
+// function removeChosenProduct(availableChoices, prodName) {
+//   console.log('Trying to remove:', prodName);
+//   for (let i = 0; i < availableChoices.length; i++) {
+//     if (availableChoices[i].prodName === prodName) {
+//       console.log('Found', availableChoices[i]);
+//       availableChoices[i] = '';
+//       break;
+//     }
+//   }
+//   return availableChoices;
+// }
 
-function getRandomInRange(min, max) {
-  var randInt = Math.floor(Math.random() * (max - min) + min);
-  console.log(min, max, randInt);
+function getRandomInRange(max) {
+  var randInt = Math.floor(Math.random() * max);
   return randInt;
 }
 
-function getRandomImage(availableChoices) {
-  console.log('availableChoices in getRandomImage:', availableChoices);
-  var choice = '';
-  while (choice === '') {
-    choice = availableChoices[getRandomInRange(0, availableChoices.length)];
-    console.log('choice:', choice);
+function vote(event) {
+  // was this click a vote?
+  if ((event.target.id === 'img1') || (event.target.id === 'img2') || (event.target.id === 'img3')) {
+    console.log(event.target.id);
+    console.log(event);
+    // I can get the src of the clicked image like this:
+    var targetImgSrc = document.getElementById(event.target.id).src;
+    console.log(targetImgSrc);
+    // I can then use that to id the Product object
+    targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
+    var chosen = getObjectByImgSrc(targetImgSrc);
+    console.log(chosen);
+    // find out which img was clicked
+
+    // increment that object's value
+
+    randomizeImages();
+    showImages();
   }
-  // remove the image from availableImages
-  removeChosenProduct(availableChoices, choice);
-  return choice;
 }
 
-function getProductId(prodName) {
+function getObjectByImgSrc(imgSrc) {
   for (let i = 0; i < Product.allProducts.length; i++) {
-    if (Product.allProducts[i].productName === prodName) {
-      return Product.allProduct[i].itemNum;
+    if (Product.allProducts[i].imgFilePath === imgSrc) {
+      return Product.allProducts[i];
     }
   }
 }
 
-function randomizeImages() {
-  // get a list with all the possible choices
-  var availableChoices = getAllChoices();
-  // for every previously chosen item, remove that choice
-  for (let i = 0; i < Product.prevChoices.length; i++) {
-    availableChoices = removeChosenProduct(availableChoices, Product.prevChoices[i]);
-    console.log('availableChoices:', availableChoices);
-  }
 
-  var img1Name = getRandomImage(availableChoices);
-  console.log('availableChoices:', availableChoices);
-  var img2Name = getRandomImage(availableChoices);
-  console.log('availableChoices:', availableChoices);
-  var img3Name = getRandomInRange(0, availableChoices);
-  console.log('availableChoices:', availableChoices);
-  
-  // capture the previous round's choices as Product.prevChoices
-  Product.prevChoices = Product.currentChoices;
-  // assign new choices to Product.currentChoices;
-  Product.currentChoices = [img1Name, img2Name, img3Name];
-  // console.log(Product.allProducts[img1Index]);
-  // console.log(Product.allProducts[img2Index]);
-  // console.log(Product.allProducts[img3Index]);
-  document.getElementById('img1').src = Product.allProducts[getProductId(img1Name)].imgFilePath;
-  // console.log(document.getElementById('img1'));
-  document.getElementById('img2').src = Product.allProducts[getProductId(img2Name)].imgFilePath;
-  // console.log(document.getElementById('img2'));  
-  document.getElementById('img3').src = Product.allProducts[getProductId(img3Name)].imgFilePath;
-  // console.log(document.getElementById('img3'));
+function randomizeImages() {
+  var blacklist = []; // values that are off limits this time
+  // add prevChoices to blacklist
+  blacklist = blacklist.concat(Product.prevChoices);
+  // get a list with all the possible choices
+  var randProd1Idx = getRandomProductIndex(blacklist);
+  var randProd2Idx = getRandomProductIndex(blacklist);
+  var randProd3Idx = getRandomProductIndex(blacklist);
+  // console.log(randProd1Idx, randProd2Idx, randProd3Idx, blacklist);
+  Product.prevChoices = [randProd1Idx, randProd2Idx, randProd3Idx];
+
 }
 
-function doChoice(event) {
-  console.log(event);
+function getRandomProductIndex(blacklist) {
+  var numToTry;
+  // keep trying until we get a random # not in blacklist
+  do {
+    numToTry = Math.floor(Math.random() * Product.allProducts.length);
+  }
+  while (blacklist.indexOf(numToTry) >= 0);
+  blacklist.push(numToTry);
+  console.log(numToTry, blacklist);
+  return numToTry;
+}
+
+
+function showImages() {
+  document.getElementById('img1').src = Product.allProducts[Product.prevChoices[0]].imgFilePath;
+  document.getElementById('img2').src = Product.allProducts[Product.prevChoices[1]].imgFilePath;
+  document.getElementById('img3').src = Product.allProducts[Product.prevChoices[2]].imgFilePath;
+  // randomizeImages();
 }
 
 
 // Need an event listener for each image element
 var img1 = document.getElementById('img1');
-img1.addEventListener('click', doChoice);
+img1.addEventListener('click', vote);
 var img2 = document.getElementById('img2');
-img2.addEventListener('click', doChoice);
+img2.addEventListener('click', vote);
 var img3 = document.getElementById('img3');
-img3.addEventListener('click', doChoice);
-
-// Some test stuff
+img3.addEventListener('click', vote);
 
 
-// Need an action to display new images
-
-// We need to do this a set number (25) of times
-var rounds = 0;
-var currentChoices = [];
 // This holds the choices from the previous round
-Product.prevChoices = ['placeholder', 'placeholder', 'placeholder']; // initialize with values we'll never see at runtime
+Product.prevChoices = []; // initialize with values we'll never see at runtime
 // This holds choices in the current round
-Product.currentChoices = ['', '', ''];
+Product.currentChoices = [];
 
 randomizeImages();
+showImages();
