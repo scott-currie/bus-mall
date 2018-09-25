@@ -9,7 +9,7 @@ var fileNames = ['bag.jpg', 'boots.jpg','chair.jpg',
   'sweep.png', 'usb.gif'];
 
 function Product(imgFileName, itemNum) {
-  this.imgFilePath = 'img/' + imgFileName;
+  this.imgFilePath = 'img/products/' + imgFileName;
   this.productName = imgFileName.substring(0, imgFileName.lastIndexOf('.'));
   this.itemNum = itemNum;
   this.altText = '';
@@ -26,8 +26,8 @@ Product.allProducts = [];
 for (let i = 0; i < fileNames.length; i++) {
   var imgFileName = fileNames[i];
   new Product(imgFileName, i);
+  console.log(Product.allProducts[i]);
 }
-
 
 function vote(event) {
   // get a reference to the clicked element id
@@ -41,12 +41,11 @@ function vote(event) {
     // loop through all the img tags
     for (let i = 0; i < 3; i++) {
       // get the src attribute of the current tag
-      var targetImgSrc = document.getElementById(imgTagIds[i]).src;
+      var targetImgName = document.getElementById(imgTagIds[i]).alt;
       // strip off the url part
-      targetImgSrc = targetImgSrc.replace('http://127.0.0.1:8080/', '');
-      console.log('targetImgSrc', targetImgSrc);
+      console.log('targetImgName', targetImgName);
       // use the img src to find the object associated with the image
-      var thisProduct = getObjectByImgSrc(targetImgSrc);
+      var thisProduct = getProductByName(targetImgName);
       // increment timesShown
       thisProduct.timesShown++;
       if (i === chosenIdx) {
@@ -71,20 +70,19 @@ function vote(event) {
   }
 }
 
-function getObjectByImgSrc(imgSrc) {
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    if (Product.allProducts[i].imgFilePath === imgSrc) {
-      return Product.allProducts[i];
-    }
+function getProductByName(prodName) {
+  for (var product of Product.allProducts) {
+    if (product.productName === prodName) {
+      return product;
+    }   
   }
 }
-
 
 function randomizeImages() {
   var blacklist = []; // values that are off limits this time
   // add prevChoices to blacklist
   blacklist = blacklist.concat(Product.prevChoices);
-  // get a list with all the possible choices
+  // get 3 random indices that are not in blacklist
   var randProd1Idx = getRandomProductIndex(blacklist);
   var randProd2Idx = getRandomProductIndex(blacklist);
   var randProd3Idx = getRandomProductIndex(blacklist);
@@ -104,13 +102,14 @@ function getRandomProductIndex(blacklist) {
   return numToTry;
 }
 
-
 function showImages() {
   // Get each img element and change its src attribute to match the currently selected random indices
   document.getElementById('img1').src = Product.allProducts[Product.prevChoices[0]].imgFilePath;
+  document.getElementById('img1').alt = Product.allProducts[Product.prevChoices[0]].productName;
   document.getElementById('img2').src = Product.allProducts[Product.prevChoices[1]].imgFilePath;
+  document.getElementById('img2').alt = Product.allProducts[Product.prevChoices[1]].productName;
   document.getElementById('img3').src = Product.allProducts[Product.prevChoices[2]].imgFilePath;
-  // randomizeImages();
+  document.getElementById('img3').alt = Product.allProducts[Product.prevChoices[2]].productName;
 }
 
 function disableEventListeners() {
