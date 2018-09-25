@@ -65,6 +65,7 @@ function vote(event) {
       showImages();
     }
     else {
+      disableEventListeners();
       summarizeResults();
     }
   }
@@ -89,7 +90,6 @@ function randomizeImages() {
   var randProd3Idx = getRandomProductIndex(blacklist);
   // console.log(randProd1Idx, randProd2Idx, randProd3Idx, blacklist);
   Product.prevChoices = [randProd1Idx, randProd2Idx, randProd3Idx];
-
 }
 
 function getRandomProductIndex(blacklist) {
@@ -106,10 +106,18 @@ function getRandomProductIndex(blacklist) {
 
 
 function showImages() {
+  // Get each img element and change its src attribute to match the currently selected random indices
   document.getElementById('img1').src = Product.allProducts[Product.prevChoices[0]].imgFilePath;
   document.getElementById('img2').src = Product.allProducts[Product.prevChoices[1]].imgFilePath;
   document.getElementById('img3').src = Product.allProducts[Product.prevChoices[2]].imgFilePath;
   // randomizeImages();
+}
+
+function disableEventListeners() {
+  var imgEls = [img1, img2, img3];
+  for (let i = 0; i < imgEls.length; i++) {
+    imgEls[i].removeEventListener('click', vote);
+  }
 }
 
 function summarizeResults() {
