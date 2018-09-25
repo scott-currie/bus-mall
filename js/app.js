@@ -115,7 +115,10 @@ function showImages() {
 function summarizeResults() {
   for (let i = 0; i < Product.allProducts.length; i++) {
     var thisProd = Product.allProducts[i];
-    console.log('Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.');
+    var result = 'Item ' + thisProd.productName + ' was seen ' + thisProd.timesShown + ' times and chosen ' + thisProd.timesChosen + ' times.';
+    console.log(result);
+    var resultP = document.getElementById('results').appendChild(document.createElement('p'));
+    resultP.textContent = result;
   }
 }
 
@@ -133,7 +136,7 @@ Product.prevChoices = []; // initialize with values we'll never see at runtime
 // This holds choices in the current round
 Product.currentChoices = [];
 
-var trials = 5;
+var trials = 25;
 
 randomizeImages();
 showImages();
