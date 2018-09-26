@@ -1,34 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Bus Mall</title>
-        <link rel="stylesheet" href="css/reset.css">
-        <link rel="stylesheet" href="css/styles.css">
-    </head>
-    <body>
-        <header>
-            <h1>Click an Image</h1>
-        </header>        
-        <main>
-            <div id="img-row">
-                <div class="imgDiv">
-                    <img id="img1" src="">
-                </div>
-                <div class="imgDiv">
-                    <img id="img2" src="">
-                </div>
-                <div class="imgDiv">
-                    <img id="img3" src="">
-                </div>
-            </div>
-            <section id="results">
 
-            </section>
-        </main>
-        <footer>
+<head>
+    <title>Bus Mall</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
 
-        </footer>
-        <script src="js/app.js"></script>
-    </body>
+<body>
+    <header>
+        <h1>Click an Image</h1>
+    </header>
+    <section id="image-row">
+        <img class="product-image" id="img1" src="">
+        <img class="product-image" id="img2" src="">
+        <img class="product-image" id="img3" src="">
+    </section>
+    <canvas id="statsChart"></canvas>
+    <footer>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
 
 </html>

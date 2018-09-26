@@ -20,12 +20,9 @@ h3 {
     width: 100%;
 }
 
-.imgDiv {
-    /* border: 1px solid black; */
-    float: left;
-    width: 32%;
-}
-
-#results {
-    clear: both;
+.product-image {
+    border: 1px solid black;
+    margin: 1%;
+    object-fit: contain;
+    width: 30%;
 }
