@@ -1,12 +1,13 @@
 'use strict';
 
-var fileNames = ['bag.jpg', 'boots.jpg','chair.jpg',
+var fileNames = ['bag.jpg', 'boots.jpg', 'chair.jpg',
   'dragon.jpg', 'scissors.jpg', 'tauntaun.jpg',
   'water-can.jpg', 'banana.jpg', 'breakfast.jpg',
   'cthulhu.jpg', 'pen.jpg', 'shark.jpg',
   'unicorn.jpg', 'wine-glass.jpg', 'bathroom.jpg',
   'bubblegum.jpg', 'dog-duck.jpg', 'pet-sweep.jpg',
-  'sweep.png', 'usb.gif'];
+  'sweep.png', 'usb.gif'
+];
 
 function Product(imgFileName, itemNum) {
   this.imgFilePath = 'img/products/' + imgFileName;
@@ -21,11 +22,20 @@ function Product(imgFileName, itemNum) {
 // This list holds all our Product objects
 Product.allProducts = [];
 
-// Create new Product objects from fileNames
-for (let i = 0; i < fileNames.length; i++) {
-  var imgFileName = fileNames[i];
-  new Product(imgFileName, i);
-  console.log(Product.allProducts[i]);
+// Check local storage for the key 'products'
+if (localStorage.getItem('products')) {
+  // Get stored objects from localStorage
+  Product.allProducts = JSON.parse(localStorage.getItem('products'));
+
+} else {
+  // Create new Product objects from fileNames
+  for (let i = 0; i < fileNames.length; i++) {
+    var imgFileName = fileNames[i];
+    new Product(imgFileName, i);
+    console.log(Product.allProducts[i]);
+  }
+  // stringify Product.allProducts then add to localStorage with key 'products'
+  localStorage.setItem('products', JSON.stringify(Product.allProducts));
 }
 
 function vote(event) {
@@ -61,10 +71,11 @@ function vote(event) {
       randomizeImages();
       // Display the next 3 images
       showImages();
-    }
-    else {
+    } else {
       disableEventListeners();
       summarizeResults();
+      // Stringify Product.allProducts and add to localStorage with key 'products'
+      localStorage.setItem('products', JSON.stringify(Product.allProducts));
     }
   }
 }
@@ -162,7 +173,7 @@ function makeChart(productNames, voteTotals) {
       scales: {
         yAxes: [{
           ticks: {
-            beginAtZero:true
+            beginAtZero: true
           }
         }]
       }
@@ -183,7 +194,7 @@ img3.addEventListener('click', vote);
 // This holds the choices from the previous round
 Product.prevChoices = []; // previous round's choices to avoid repeats
 
-var trials = 25;
+var trials = 5;
 
 randomizeImages();
 showImages();
