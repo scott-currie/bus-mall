@@ -17,10 +17,11 @@ h3 {
 #img-row {
     clear: both;
     margin: 0 auto;
-    width: 100%;
+    width: 80%;
 }
 
 #chart-area {
+    margin: 0 auto;
     height: 6em;
     width: 60%;
 }
@@ -28,7 +29,8 @@ h3 {
 .product-image {
     border: 1px solid black;
     margin: 1%;
-    max-width: 30%;
+    max-height: 600px;
     object-fit: contain;
+    /* padding-top: 30%; */
     width: 30%;
 }
