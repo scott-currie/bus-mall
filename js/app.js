@@ -194,7 +194,7 @@ img3.addEventListener('click', vote);
 // This holds the choices from the previous round
 Product.prevChoices = []; // previous round's choices to avoid repeats
 
-var trials = 5;
+var trials = 25;
 
 randomizeImages();
 showImages();
