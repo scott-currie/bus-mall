@@ -106,7 +106,7 @@ function getRandomProductIndex(blacklist) {
   do {
     numToTry = Math.floor(Math.random() * Product.allProducts.length);
   }
-  while (blacklist.indexOf(numToTry) >= 0);
+  while (blacklist.includes(numToTry));
   blacklist.push(numToTry);
   console.log(numToTry, blacklist);
   return numToTry;
